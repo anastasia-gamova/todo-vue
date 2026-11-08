@@ -1,5 +1,6 @@
 :root {
-  --bg: #f4f5f7;
+  --bg: #eef1f7;
+  --bg-accent: #e3e9f6;
   --card-bg: #ffffff;
   --text: #1f2430;
   --text-muted: #6b7280;
@@ -8,14 +9,16 @@
   --accent-hover: #2f5bd0;
   --danger: #e5484d;
   --completed: #9ca3af;
-  --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
-  --radius: 12px;
+  --shadow: 0 12px 34px rgba(17, 24, 39, 0.1);
+  --radius: 14px;
   --focus: 0 0 0 3px rgba(59, 110, 245, 0.35);
 }
 
+/* Тёмная тема по настройке системы — если пользователь не выбрал светлую вручную. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #15171c;
+  :root:not([data-theme='light']) {
+    --bg: #101219;
+    --bg-accent: #181c27;
     --card-bg: #1e2127;
     --text: #e8eaed;
     --text-muted: #9aa0ab;
@@ -24,8 +27,23 @@
     --accent-hover: #6f95f8;
     --danger: #f1656a;
     --completed: #6b7280;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    --shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
   }
+}
+
+/* Тёмная тема, выбранная вручную (переключателем). */
+:root[data-theme='dark'] {
+  --bg: #101219;
+  --bg-accent: #181c27;
+  --card-bg: #1e2127;
+  --text: #e8eaed;
+  --text-muted: #9aa0ab;
+  --border: #30343c;
+  --accent: #5b86f7;
+  --accent-hover: #6f95f8;
+  --danger: #f1656a;
+  --completed: #6b7280;
+  --shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
 }
 
 * {
@@ -40,12 +58,22 @@ body {
 
 body {
   min-height: 100vh;
-  background: var(--bg);
+  background-color: var(--bg);
+  /* Мягкий фон вместо плоского серого. */
+  background-image: radial-gradient(
+    1000px 520px at 50% -15%,
+    var(--bg-accent),
+    transparent 70%
+  );
+  background-attachment: fixed;
   color: var(--text);
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 /* Утилита: прячет элемент визуально, но оставляет для скринридеров. */
@@ -74,9 +102,11 @@ body {
 }
 
 .card {
+  position: relative;
   width: 100%;
   max-width: 560px;
   background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 24px;
@@ -84,9 +114,39 @@ body {
 
 .card__title {
   margin: 0 0 20px;
+  padding: 0 44px;
   font-size: 1.6rem;
   font-weight: 700;
   text-align: center;
+}
+
+/* Переключатель темы в углу карточки. */
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: var(--text-muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* Поле ввода новой задачи. */
@@ -100,6 +160,7 @@ body {
   flex: 1;
   min-width: 0;
   padding: 12px 14px;
+  font-family: inherit;
   font-size: 1rem;
   color: var(--text);
   background: var(--card-bg);
@@ -113,6 +174,7 @@ body {
 
 .task-input__button {
   padding: 12px 18px;
+  font-family: inherit;
   font-size: 1rem;
   font-weight: 600;
   color: #fff;
@@ -161,12 +223,16 @@ body {
 
 .filters__button {
   padding: 6px 12px;
+  font-family: inherit;
   font-size: 0.9rem;
   color: var(--text-muted);
   background: transparent;
   border: none;
   border-radius: 7px;
   cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .filters__button:hover {
@@ -180,6 +246,7 @@ body {
 
 .clear-completed {
   padding: 8px 14px;
+  font-family: inherit;
   font-size: 0.9rem;
   color: var(--text-muted);
   background: var(--card-bg);
@@ -203,6 +270,7 @@ body {
 
 /* Список задач. */
 .task-list {
+  position: relative;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -216,6 +284,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
+  background: var(--card-bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -223,12 +292,62 @@ body {
   border-bottom: none;
 }
 
-.task-item__checkbox {
-  width: 20px;
-  height: 20px;
+/* Свой круглый чекбокс. */
+.checkbox {
+  position: relative;
+  display: inline-flex;
   flex-shrink: 0;
-  accent-color: var(--accent);
+  width: 22px;
+  height: 22px;
+}
+
+.checkbox__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
   cursor: pointer;
+}
+
+.checkbox__box {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  pointer-events: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.checkbox__check {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  transition: stroke-dashoffset 0.2s ease;
+}
+
+.checkbox__input:checked + .checkbox__box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkbox__input:checked + .checkbox__box .checkbox__check {
+  stroke-dashoffset: 0;
+}
+
+.checkbox__input:focus-visible + .checkbox__box {
+  box-shadow: var(--focus);
 }
 
 .task-item__title {
@@ -247,6 +366,7 @@ body {
   flex: 1;
   min-width: 0;
   padding: 8px 10px;
+  font-family: inherit;
   font-size: 1rem;
   color: var(--text);
   background: var(--card-bg);
@@ -264,6 +384,9 @@ body {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .task-item__button:hover {
@@ -291,6 +414,57 @@ body {
   padding: 20px 16px;
   border: 1px dashed var(--border);
   border-radius: 10px;
+}
+
+/* Анимации списка: появление, удаление, перестановка. */
+.task-enter-active,
+.task-leave-active {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.task-enter-from {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.task-leave-to {
+  opacity: 0;
+  transform: translateX(16px);
+}
+
+/* Убираем из потока, чтобы соседи плавно сдвигались. */
+.task-leave-active {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.task-move {
+  transition: transform 0.25s ease;
+}
+
+/* Уважаем системную настройку «меньше движения». */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .task-enter-active,
+  .task-leave-active,
+  .task-move,
+  .checkbox__box,
+  .checkbox__check {
+    transition: none;
+  }
+
+  .task-enter-from,
+  .task-leave-to {
+    opacity: 1;
+    transform: none;
+  }
+
+  .task-leave-active {
+    position: static;
+  }
 }
 
 /* Телефоны. */

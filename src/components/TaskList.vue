@@ -14,7 +14,12 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <ul class="task-list">
+  <!-- TransitionGroup анимирует появление, удаление и перестановку задач. -->
+  <TransitionGroup
+    tag="ul"
+    name="task"
+    class="task-list"
+  >
     <TaskItem
       v-for="task in tasks"
       :key="task.id"
@@ -23,5 +28,5 @@ const emit = defineEmits<{
       @remove="emit('remove', $event)"
       @edit="(id, title) => emit('edit', id, title)"
     />
-  </ul>
+  </TransitionGroup>
 </template>

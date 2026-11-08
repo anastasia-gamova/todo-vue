@@ -47,14 +47,29 @@ function cancelEditing(): void {
     :class="{ 'task-item--completed': task.completed }"
   >
     <template v-if="!editing">
-      <input
-        :id="`task-${task.id}`"
-        class="task-item__checkbox"
-        type="checkbox"
-        :checked="task.completed"
-        :aria-label="`Отметить выполненной: ${task.title}`"
-        @change="emit('toggle', task.id)"
-      >
+      <!-- Свой круглый чекбокс: настоящий input скрыт, но доступен с клавиатуры. -->
+      <span class="checkbox">
+        <input
+          :id="`task-${task.id}`"
+          class="checkbox__input"
+          type="checkbox"
+          :checked="task.completed"
+          :aria-label="`Отметить выполненной: ${task.title}`"
+          @change="emit('toggle', task.id)"
+        >
+        <span
+          class="checkbox__box"
+          aria-hidden="true"
+        >
+          <svg
+            class="checkbox__check"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 12.5l4.5 4.5L19 7.5" />
+          </svg>
+        </span>
+      </span>
+
       <span
         class="task-item__title"
         @dblclick="startEditing"

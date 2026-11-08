@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useTasks } from './composables/useTasks'
+import { useTheme } from './composables/useTheme'
 import TaskInput from './components/TaskInput.vue'
 import TaskFilters from './components/TaskFilters.vue'
 import TaskList from './components/TaskList.vue'
 import TaskFooter from './components/TaskFooter.vue'
+import ThemeToggle from './components/ThemeToggle.vue'
+
+const { theme, toggle: toggleTheme } = useTheme()
 
 const {
   tasks,
@@ -42,6 +46,10 @@ const emptyFilterMessage = computed(() => {
 <template>
   <div class="app">
     <main class="card">
+      <ThemeToggle
+        :theme="theme"
+        @toggle="toggleTheme"
+      />
       <h1 class="card__title">
         Список задач
       </h1>
