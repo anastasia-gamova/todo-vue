@@ -127,14 +127,21 @@ body {
   background: var(--accent-hover);
 }
 
-/* Панель фильтров и счётчика. */
-.toolbar {
+/* Ряд фильтров — сверху. */
+.filters-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+/* Футер под списком: счётчик слева, кнопка справа. */
+.footer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
   justify-content: space-between;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-top: 14px;
 }
 
 .counter {
@@ -172,18 +179,21 @@ body {
 }
 
 .clear-completed {
-  padding: 6px 10px;
+  padding: 8px 14px;
   font-size: 0.9rem;
   color: var(--text-muted);
-  background: transparent;
-  border: 1px solid transparent;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .clear-completed:hover:not(:disabled) {
   color: var(--danger);
-  border-color: var(--border);
+  border-color: var(--danger);
 }
 
 .clear-completed:disabled {
@@ -289,12 +299,7 @@ body {
     padding: 16px;
   }
 
-  .toolbar {
-    justify-content: center;
-  }
-
   .filters {
-    order: 1;
     width: 100%;
     justify-content: center;
   }

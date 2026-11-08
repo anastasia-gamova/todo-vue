@@ -4,6 +4,7 @@ import { useTasks } from './composables/useTasks'
 import TaskInput from './components/TaskInput.vue'
 import TaskFilters from './components/TaskFilters.vue'
 import TaskList from './components/TaskList.vue'
+import TaskFooter from './components/TaskFooter.vue'
 
 const {
   tasks,
@@ -61,12 +62,10 @@ const emptyFilterMessage = computed(() => {
       </section>
 
       <template v-else>
+        <!-- Фильтры — сверху. -->
         <TaskFilters
           :model-value="filter"
-          :remaining="remaining"
-          :has-completed="hasCompleted"
           @update:model-value="setFilter"
-          @clear-completed="clearCompleted"
         />
 
         <p
@@ -81,6 +80,13 @@ const emptyFilterMessage = computed(() => {
           @toggle="toggleTask"
           @remove="removeTask"
           @edit="editTask"
+        />
+
+        <!-- Футер под списком: счётчик слева, кнопка справа. -->
+        <TaskFooter
+          :remaining="remaining"
+          :has-completed="hasCompleted"
+          @clear-completed="clearCompleted"
         />
       </template>
     </main>
