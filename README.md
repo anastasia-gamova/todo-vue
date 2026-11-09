@@ -6,12 +6,10 @@
 
 ## Демо
 
-🔗 Vercel: https://todo-vue-ruby-tau.vercel.app
+- **GitHub Pages** (открывается в России без VPN) — https://anastasia-gamova.github.io/todo-vue/
+- **Vercel** (запасная ссылка) — https://todo-vue-ruby-tau.vercel.app
 
-🔗 GitHub Pages (открывается в России без VPN): https://anastasia-gamova.github.io/todo-vue/
-
-Обе версии — одно и то же приложение, опубликованы автоматически при каждом
-push в ветку `main`.
+Сайт публикуется автоматически при каждом push в ветку `main`.
 
 ## Скриншоты
 
